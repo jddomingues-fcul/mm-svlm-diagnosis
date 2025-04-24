@@ -5,20 +5,27 @@ This pomotes a shift in research towards the multimodality, removing the need fo
 
 The scope here focuses on Small Vision-Language Models (SVLM) to attend to medical restrictions such as: reduced budget and less advanced infrastructure; ownership of the models instead of relying on cloud solutions and therefore promoting data privacy, and interpretability of the model predictions to understand the rationale behind the diagnosis.
 
-The base-sized models use 176M parameters (with DINOv2 pre-trained on ImageNet as image encoder), and are trained on semi-structured reports in a "column:value" format with patch representations enhancement and an ordered conditional auto-regressive mechanism.
+The base-sized models use 176M parameters (with DINOv2 pre-trained on ImageNet as image encoder), and are trained on semi-structured reports in a "column:value" format with:
+- Adjusted DINOv2 patch representations;
+- Ordered conditional auto-regressive semi-structured generation;
+- Weighted random sampler constraint to deal with class imbalance;
+- Permutation invariance of generated additional information;
+- Masked cross-attention mechanism.
 
 ![Multimodal Performance on an MRI Sample](mri-sample.png)
 
-| **Eval**                                                | **MRI Test Set**  | **US Test Set**   | **DM Test Set**   |
-| ------------------------------------------------------- | ----------------- | ----------------- | ----------------- |
-| **# Exams**                                             | 3497              | 61                | 5568              |
-| **# BI-RADS Cases**                                     | 4                 | 7                 | 10                |
-| **Respective Unimodal Model**                           |                   |                   |                   |
-| &nbsp; &nbsp; &nbsp; Additional Information BLEU-4 (SE) | 0.707 (0.006)     | 0.485 (0.020)     | **0.420 (0.002)** |
-| &nbsp; &nbsp; &nbsp; BI-RADS F1-Score (SE)              | **35.6% (1.0%)**  | 11.4% (4.4%)      | 23.2% (0.7%)      |
-| **Multimodal Model**                                    |                   |                   |                   |
-| &nbsp; &nbsp; &nbsp; Additional Information BLEU-4 (SE) | **0.847 (0.006)** | **0.673 (0.025)** | 0.364 (0.002)     |
-| &nbsp; &nbsp; &nbsp; BI-RADS F1-Score (SE)              | 25.8% (1.2%)      | **52.9% (6.4%)**  | **26.0% (0.7%)**  |
+| **Eval**                                                | **MRI Test Set**    | **US Test Set**     | **DM Test Set**     |
+| ------------------------------------------------------- | -----------------   | -----------------   | -----------------   |
+| **# Exams**                                             | 3497                | 61                  | 5568                |
+| **# BI-RADS Cases**                                     | 4                   | 7                   | 10                  |
+| **Respective Unimodal Model**                           |                     |                     |                     |
+| &nbsp; &nbsp; &nbsp; Additional Information BLEU-4 (SE) | 0.6729 (0.0062)     | 0.2569 (0.0113)     | **0.4044 (0.0017)** |
+| &nbsp; &nbsp; &nbsp; BI-RADS F1-Score (%) (SE)          | 25.57 (1.06)        | 12.86 (4.59)        | 21.78 (0.66)        |
+| &nbsp; &nbsp; &nbsp; Modality F1-Score (%) (SE)         | 98.98 (0.29)        | 97.14 (2.30)        | **99.71 (0.10)**    |
+| **Multimodal Model**                                    |                     |                     |                     |
+| &nbsp; &nbsp; &nbsp; Additional Information BLEU-4 (SE) | **0.7084 (0.0060)** | **0.4143 (0.0161)** | 0.3754 (0.0017)     |
+| &nbsp; &nbsp; &nbsp; BI-RADS F1-Score (%) (SE)          | **64.57 (0.70)**    | **28.57 (6.09)**    | **30.25 (0.54)**    |
+| &nbsp; &nbsp; &nbsp; Modality F1-Score (%) (SE)         | **100.00 (0.00)**   | **98.57 (1.64)**    | 90.75 (0.42)        |
 
 
 ## Setup
@@ -152,7 +159,7 @@ make rg_dino_decoder
 | Base   | 176                           | 6         | 6                  | 1024           | 3072 (768*4) | 8                           | DINOv2 ViT-B/14 with Reg |
 | Base-S | 106                           | 6         | 6                  | 1024           | 3072 (768*4) | 8                           | DINOv2 ViT-S/14 with Reg |
 | Nano   | 106                           | 2         | 2                  | 256            | 768          | 2                           | DINOv2 ViT-B/14 with Reg |
-| Nano-S | 58.4                          | 2         | 2                  | 256            | 768          | 2                           | DINOv2 ViT-S/14 with Reg |
+| Nano-S | 58.6                          | 2         | 2                  | 256            | 768          | 2                           | DINOv2 ViT-S/14 with Reg |
 
 
 ## Evaluation
